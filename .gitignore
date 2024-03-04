@@ -1,0 +1,15 @@
+build/
+.idea/
+obj/
+bin/
+
+*.depend
+*.cbp
+*.layout
+version.txt
+
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
+
