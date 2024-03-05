@@ -46,7 +46,7 @@ namespace mqtt
         {
             char threshold = 20;
             char noiseKernel = 1;
-            char adaptiveSize = 9;
+            char adaptiveSize = 5;
         }
 
         namespace parameters
