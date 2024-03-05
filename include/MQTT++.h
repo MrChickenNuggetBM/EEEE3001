@@ -57,18 +57,18 @@ namespace mqtt
         }
         namespace parameters
         {
-            extern static int
+            extern int
                 xCenter,
                 yCenter,
                 xDiameter,
                 yDiameter,
                 thickness;
 
-            extern static bool
+            extern bool
                 isCircle,
                 isGUIControl;
 
-            extern static char
+            extern char
                 modality;
         }
 

@@ -51,16 +51,16 @@ namespace mqtt
 
         namespace parameters
         {
-            static int xCenter = 0,
+            int xCenter = 0,
                        yCenter = 0,
                        xDiameter = 33,
                        yDiameter = 60,
                        thickness = 150;
 
-            static bool isCircle = false,
+            bool isCircle = false,
                         isGUIControl = true;
 
-            static char modality = 0;
+            char modality = 0;
         }
 
         namespace brightness
