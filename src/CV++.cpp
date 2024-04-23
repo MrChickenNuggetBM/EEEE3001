@@ -218,11 +218,14 @@ Ellipse ellipseAverage(Ellipse elp1, Ellipse elp2)
 }
 
 // contains the phase ring
+const Point2f pRingCentre(60, 60);
 const vector<Ellipse> phaseEllipses =
 {
     // outer
     Ellipse(
-        Point2f(245, 146),
+        // Point2f(220, 137),
+        // Point2f(260, 133),
+        pRingCentre,
         Size2f(46, 46),
         0,
         Scalar(0, 255, 255, 255),
@@ -231,7 +234,9 @@ const vector<Ellipse> phaseEllipses =
 
     // inner
     Ellipse(
-        Point2f(245, 146),
+        // Point2f(220, 137),
+        // Point2f(260, 133),
+        pRingCentre,
         Size2f(56, 56),
         0,
         Scalar(0, 255, 255, 255),
@@ -552,8 +557,8 @@ vector<ellipse_data> detect_ellipses(Mat src, int minimized_size = 64, unsigned 
         ellipse_data elp = ellipse_detection(edges, minimized_size, 5, 0);
 
         ellipses[i] = elp;
-        // cout << "Found: (x_0 = " << elp.x0 << ", y_0 = " << elp.y0 << ", a = " << elp.a << ", b = " << elp.b <<
-        //      ", A = " << elp.orient << ") " << endl;
+        cout << "Found: (x_0 = " << elp.x0 << ", y_0 = " << elp.y0 << ", a = " << elp.a << ", b = " << elp.b <<
+             ", A = " << elp.orient << ") " << endl;
         clear_picture(edges, elp);
     }
     return ellipses;
@@ -626,20 +631,29 @@ vector<Ellipse> detectEllipses(Mat src, unsigned int numEllipses, int minimizedS
     // apply noise filter to image -------------------------
     cvtColor(src, src, COLOR_BGRA2GRAY);
 
-    // apply Otsu's method threshold to image --------------
-    adaptiveThreshold(src,src,255,ADAPTIVE_THRESH_MEAN_C,THRESH_BINARY_INV, mqtt::topics::cv::adaptiveSize,mqtt::topics::cv::threshold);
-    // threshold(src, src, mqtt::topics::cv::threshold/*140*/, 255, THRESH_BINARY);
-    // threshold(src, src, 0, 255, THRESH_OTSU);
+    // Mat kernel = getStructuringElement(MORPH_RECT, Size(kernelSize, kernelSize)); // Adjust kernel size as needed
+    // morphologyEx(src, src, MORPH_OPEN, kernel);
 
-    // send thresholded image to broker
-    auto token = publishImage("cvimages/threshold", src);
-    token->wait_for(std::chrono::seconds(10));
+    // Mat mask = src.clone();
+    // Mat orgSrc = src.clone();
+    // GaussianBlur(mask, mask, Size(31, 31), 0, 0);
+    // cv::max(orgSrc,mask,src);
 
-    Mat kernel = getStructuringElement(MORPH_RECT, Size(kernelSize, kernelSize)); // Adjust kernel size as needed
-    morphologyEx(src, src, MORPH_OPEN, kernel);
+    Scalar avg = mean(src, src > 30);
+    Mat mask(src.size(), CV_8UC1, avg[0]);
+    cv::max(src,mask,src);
 
     // send filtered image to broker
-    token = publishImage("cvimages/filtered", src);
+    auto token = publishImage("cvimages/filtered", src);
+    token->wait_for(std::chrono::seconds(10));
+
+    // apply Otsu's method threshold to image --------------
+    // adaptiveThreshold(src,src,255,ADAPTIVE_THRESH_MEAN_C,THRESH_BINARY_INV, mqtt::topics::cv::adaptiveSize,mqtt::topics::cv::threshold);
+    // threshold(src, src, mqtt::topics::cv::threshold/*140*/, 255, THRESH_BINARY);
+    threshold(src, src, 0, 255, THRESH_OTSU);
+
+    // send thresholded image to broker
+    token = publishImage("cvimages/threshold", src);
     token->wait_for(std::chrono::seconds(10));
 
     // add padding to image to make square with length of power of two
