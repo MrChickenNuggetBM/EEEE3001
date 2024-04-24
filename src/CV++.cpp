@@ -605,12 +605,18 @@ PaddedMat &PaddedMat::operator=(const PaddedMat &other)
 
 Mat PaddedMat::pad(const Mat &mat)
 {
+    // finds the longer side
     unsigned int larger = std::max(mat.rows, mat.cols);
+
+    // finds the closest power of 2 larger than the longer side
     unsigned int desire = std::pow(2, std::ceil(std::log2(larger)));
     rowDiff = desire - mat.rows;
     colDiff = desire - mat.cols;
 
+    // create the Mat for the padded image
     Mat paddedMat = Mat::zeros(desire, desire, mat.type());
+
+    // copy across the actual image
     mat.copyTo(paddedMat(Rect(0, 0, mat.cols, mat.rows)));
 
     return paddedMat;

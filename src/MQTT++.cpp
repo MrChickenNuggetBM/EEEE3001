@@ -35,6 +35,7 @@
 using namespace std;
 using namespace cv;
 
+// define some constants important for the MQTT protocol
 namespace mqtt
 {
 const int QoS = 1,
@@ -67,7 +68,7 @@ int xCenter = -3,
     yCenter = -1,
     xDiameter = 28,
     yDiameter = 46,
-    thickness = 50;
+    thickness = 100;
 
 bool isCircle = false,
      isGUIControl = false;
