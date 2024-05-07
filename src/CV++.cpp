@@ -270,6 +270,7 @@ SOFTWARE.
 
 */
 
+// is there a new ellipse which was just found?
 bool isEllipseFound = true;
 
 inline double distance_square(double x1, double y1, double x2, double y2)

@@ -93,6 +93,7 @@ SOFTWARE.
 
 */
 
+// is there a new ellipse which was just found?
 extern bool isEllipseFound;
 
 struct ellipse_data
